@@ -7,9 +7,22 @@ const router = express.Router();
 
 //get all accounts, with some optional query string stuff
 router.get('/', (req, res) => {
-    // const query = db.select('name', 'budget').from('accounts');
+    const { limit, orderby } = req.query
+    
+    const query = db('accounts');
 
-    db('accounts')
+    //orders the stuff in descending order based on budget
+    if(orderby){
+        query.orderBy(orderby, 'desc');
+    }
+
+    //sets a limit if there is one given in the query
+    if(limit){
+        query.limit(limit);
+    }
+
+
+    query
         .then(accounts => {
             res.status(200).json(accounts);
         })
